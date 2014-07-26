@@ -2169,7 +2169,8 @@ void overheadeditor(void)
 	long templong, templong1, templong2, opageoffset, doubvel;
 	long startwall, endwall, dax, day, daz, x1, y1, x2, y2, x3, y3, x4, y4;
 	long highlightx1=0, highlighty1=0, highlightx2=0, highlighty2=0, xvect, yvect;
-	short pag, suckwall=0, sucksect, newnumwalls, newnumsectors, split=0, bad;
+//	short pag, suckwall=0, sucksect, newnumwalls, newnumsectors, split=0, bad;
+	short suckwall=0, sucksect, newnumwalls, newnumsectors, split=0, bad;
 	short splitsect=0, danumwalls, secondstartwall, joinsector[2], joinsectnum;
 	short splitstartwall=0, splitendwall, loopnum;
 	short mousx, mousy;
@@ -2209,7 +2210,7 @@ void overheadeditor(void)
     	outpw(0x3d4,0x000d);
     #endif
 
-	pag = 0;
+//	pag = 0;
 	highlightcnt = -1;
 	cursectorhighlight = -1;
 

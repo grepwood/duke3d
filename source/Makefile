@@ -124,9 +124,9 @@ else
 	CFLAGS += -fno-strict-aliasing
 	CFLAGS += -W -Wall -Wno-unused -funsigned-char
 	ifeq ($(strip $(macosx)),true)
-		OPTIMIZE = -O3 -mdynamic-no-pic -falign-loops=16
+		OPTIMIZE = -O3 -Wall -Wextra -pedantic -mdynamic-no-pic -falign-loops=16
 	else
-		OPTIMIZE = -O2
+		OPTIMIZE = -O2 -Wall -Wextra -pedantic
 	endif
 endif
 

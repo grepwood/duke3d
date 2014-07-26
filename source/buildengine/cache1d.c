@@ -253,6 +253,7 @@ static long groupfil[MAXGROUPFILES] = {-1,-1,-1,-1};
 static long groupfilpos[MAXGROUPFILES];
 static char *gfilelist[MAXGROUPFILES];
 static long *gfileoffs[MAXGROUPFILES];
+static char KenSilverman[12] = {'K','e','n','S','i','l','v','e','r','m','a','n'};
 
 static unsigned char filegrp[MAXOPENFILES];
 static long filepos[MAXOPENFILES];
@@ -317,10 +318,7 @@ long initgroupfile(const char *filename)
 	else {
 		groupfilpos[numgroupfiles] = 0;
 		read(groupfil[numgroupfiles],buf,16);
-		if ((buf[0] != 'K') || (buf[1] != 'e') || (buf[2] != 'n') ||
-			 (buf[3] != 'S') || (buf[4] != 'i') || (buf[5] != 'l') ||
-			 (buf[6] != 'v') || (buf[7] != 'e') || (buf[8] != 'r') ||
-			 (buf[9] != 'm') || (buf[10] != 'a') || (buf[11] != 'n'))
+		if (memcmp(KenSilverman,buf,12))
 		{
 			close(groupfil[numgroupfiles]);
 			groupfil[numgroupfiles] = -1;
@@ -328,11 +326,13 @@ long initgroupfile(const char *filename)
 		}
 		gnumfiles[numgroupfiles] = BUILDSWAP_INTEL32(*((long *)&buf[12]));
 
-		if ((gfilelist[numgroupfiles] = (char *)kmalloc(gnumfiles[numgroupfiles]<<4)) == 0)
-			{ printf("Not enough memory for file grouping system\n"); exit(0); }
-		if ((gfileoffs[numgroupfiles] = (long *)kmalloc((gnumfiles[numgroupfiles]+1)<<2)) == 0)
-			{ printf("Not enough memory for file grouping system\n"); exit(0); }
-
+		gfilelist[numgroupfiles] = (char *)malloc(gnumfiles[numgroupfiles]<<4);
+		gfileoffs[numgroupfiles] = (long *)malloc((gnumfiles[numgroupfiles]+1)<<2);
+		if (gfilelist[numgroupfiles] == NULL || gfileoffs[numgroupfiles] == NULL) {
+			puts("Not enough memory for file grouping system");
+			printf("[DEBUG]: malloc called with %lx returned %lx\n",gnumfiles[numgroupfiles]<<4,gfilelist[numgroupfiles]);
+			printf("[DEBUG]: malloc called with %lx returned %lx\n",(gnumfiles[numgroupfiles]+1)<<2,gfileoffs[numgroupfiles]);
+			exit(0); }
 		read(groupfil[numgroupfiles],gfilelist[numgroupfiles],gnumfiles[numgroupfiles]<<4);
 
 		j = 0;
